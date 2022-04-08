@@ -29,7 +29,7 @@ else:
     result_log_file = "./output/durecdial/output_log"
     train_model_path = "./output/durecdial/model/"
 
-logging.basicConfig(filename=result_log_file, level=logging.INFO)
+# logging.basicConfig(filename=result_log_file, level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 os.environ['CUDA_VISIBLE_DEVICES'] = '0'
@@ -69,7 +69,7 @@ def train(model_path=None, Lambda=None):
 
     if model_path:
         if not os.path.exists(model_path):
-            os.mkdir(model_path)
+            os.makedirs(model_path)
     with open(embedding_file, "rb") as f:
         embeddings = pickle.load(f, encoding="bytes")
         embeddings = torch.FloatTensor(embeddings)
