@@ -29,7 +29,11 @@ else:
     result_log_file = "./output/durecdial/output_log"
     train_model_path = "./output/durecdial/model/"
 
-# logging.basicConfig(filename=result_log_file, level=logging.INFO)
+Count_Samples = 100000
+Save_Step = 50
+DefaultLambda = 0.3
+
+logging.basicConfig(filename=result_log_file, level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 os.environ['CUDA_VISIBLE_DEVICES'] = '0'
@@ -75,19 +79,19 @@ def train(model_path=None, Lambda=None):
         embeddings = torch.FloatTensor(embeddings)
     train, test = torch.load(train_data_file), torch.load(val_data_file)
 
-    context_train = train['c']
-    response_train = train['r']
-    knowledge_train = train['k']
-    goal_train = train['g']
-    knowledge_mask_train = train['kn_mask']
-    y_train = train['y']
+    context_train = train['c'][:Count_Samples]
+    response_train = train['r'][:Count_Samples]
+    knowledge_train = train['k'][:Count_Samples]
+    goal_train = train['g'][:Count_Samples]
+    knowledge_mask_train = train['kn_mask'][:Count_Samples]
+    y_train = train['y'][:Count_Samples]
 
-    context_test = test['c']
-    response_test = test['r']
-    knowledge_test = test['k']
-    goal_test = test['g']
-    knowledge_mask_test = test['kn_mask']
-    y_test = test['y']
+    context_test = test['c'][:Count_Samples]
+    response_test = test['r'][:Count_Samples]
+    knowledge_test = test['k'][:Count_Samples]
+    goal_test = test['g'][:Count_Samples]
+    knowledge_mask_test = test['kn_mask'][:Count_Samples]
+    y_test = test['y'][:Count_Samples]
 
     model = KPN(dataset=dataset, embedding=embeddings, device=device)
     model = model.cuda()
@@ -105,7 +109,7 @@ def train(model_path=None, Lambda=None):
     test_set = Dataset(context_test, response_test, knowledge_test, goal_test, knowledge_mask_test, y_test)
     test_generator = data.DataLoader(test_set, batch_size=batch_size, shuffle=False)
 
-    save_step = 500
+    save_step = Save_Step
     best_result = [0.0, 0.0]
     patience = 0
     logger.info("Start Lambda" + str(Lambda))
@@ -183,12 +187,12 @@ def test(model_path, test_data_file, ground_truth_path, result_path, save_kn=Fal
         embeddings = torch.FloatTensor(embeddings)
     test_data = torch.load(test_data_file)
 
-    context_test = test_data['c']
-    response_test = test_data['r']
-    knowledge_test = test_data['k']
-    goal_test = test_data['g']
-    knowledge_mask_test = test_data['kn_mask']
-    y_test = test_data['y']
+    context_test = test_data['c'][:Count_Samples]
+    response_test = test_data['r'][:Count_Samples]
+    knowledge_test = test_data['k'][:Count_Samples]
+    goal_test = test_data['g'][:Count_Samples]
+    knowledge_mask_test = test_data['kn_mask'][:Count_Samples]
+    y_test = test_data['y'][:Count_Samples]
 
     test_set = Dataset(context_test, response_test, knowledge_test, goal_test, [0] * len(context_test), y_test)
     test_generator = data.DataLoader(test_set, batch_size=batch_size, shuffle=False)
@@ -214,4 +218,4 @@ def test(model_path, test_data_file, ground_truth_path, result_path, save_kn=Fal
         result = evaluate_list(all_candidate_scores, y_test, negtive_sample=10)
         print("Hits@1: %f, Hits@3: %f, MRR: %f" % (result[0], result[1], result[2]))
 
-train(train_model_path, 0.3)
+train(train_model_path, DefaultLambda)
