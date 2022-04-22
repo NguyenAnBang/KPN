@@ -29,9 +29,9 @@ else:
     result_log_file = "./output/durecdial/output_log"
     train_model_path = "./output/durecdial/model/"
 
-Count_Samples = 100000
-Save_Step = 50
-DefaultLambda = 1
+Count_Samples = 200000
+Save_Step = 100
+DefaultLambda = 0.3
 
 logging.basicConfig(filename=result_log_file, level=logging.INFO)
 logger = logging.getLogger(__name__)
