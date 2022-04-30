@@ -31,7 +31,7 @@ else:
 
 Count_Samples = 500000
 Save_Step = 250
-DefaultLambda = 0.0
+DefaultLambda = 0.1
 
 logging.basicConfig(filename=result_log_file, level=logging.INFO)
 logger = logging.getLogger(__name__)
