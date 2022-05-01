@@ -29,7 +29,7 @@ else:
     result_log_file = "./output/durecdial/output_log"
     train_model_path = "./output/durecdial/model/"
 
-Count_Samples = 800000
+Count_Samples = 700000
 Save_Step = 400
 DefaultLambda = 0.0
 
