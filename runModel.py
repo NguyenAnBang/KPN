@@ -30,7 +30,7 @@ else:
     train_model_path = "./output/durecdial/model/"
 
 Count_Samples = 800000
-Save_Step = 250
+Save_Step = 400
 DefaultLambda = 0.0
 
 logging.basicConfig(filename=result_log_file, level=logging.INFO)
